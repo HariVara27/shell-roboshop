@@ -21,15 +21,15 @@ fi
 VALIDATE(){ #functions recieve i/p's through args like shell script args
 
     if [ $1 -ne 0 ]; then
-        echo -e "ERROR:: Installing $2 is...... $R failure $NO" | tee -a $LOG_FILE
+        echo -e " $2 is...... $R failure $NO" | tee -a $LOG_FILE
         exit 1
     else
-        echo -e  "Installing $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
+        echo -e  " $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
     fi
 
 }
 
-cp mongo.repo vim /etc/yum.repos.d/mongo.repo
+cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Adding Mongo Repo"
 
 dnf install mongodb-org -y &>>$LOG_FILE
