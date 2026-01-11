@@ -25,45 +25,47 @@ VALIDATE(){ #functions recieve i/p's through args like shell script args
         echo -e " $2 is...... $R failure $NO" | tee -a $LOG_FILE
         exit 1
     else
-        echo -e " $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
+        echo -e  " $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
     fi
 
 }
 
 #####NODEJS INSTALLATION#####
-dnf module disable nodejs -y &>>$LOG_FILE
+dnf module disable nodejs -y
 VALIDATE $? "Disabling NodeJS"
 
-dnf module enable nodejs:20 -y &>>$LOG_FILE
+dnf module enable nodejs:20 -y
 VALIDATE $? "Enabling NodeJS 20"
 
-dnf install nodejs -y &>>$LOG_FILE
+dnf install nodejs -y
 VALIDATE $? "installing NodeJS"
 
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 VALIDATE $? "Creating system user"
 
 mkdir /app
 VALIDATE $? "Creating App Directory"
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
+
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip 
 VALIDATE $? "Downloading catalogue Directory"
+
 cd /app 
 VALIDATE $? "Changing to App Directory"
-unzip /tmp/catalogue.zip &>>$LOG_FILE
+unzip /tmp/catalogue.zip
 VALIDATE $? "unzip catalogue"
-npm install &>>$LOG_FILE
+npm install
 VALIDATE $? "install dependencies"
-cp catalogue.service /etc/systemd/system/catalogue.service
+cp catalogue.serivce /etc/systemd/system/catalogue.service
 VALIDATE $? "Copy Systemctl Service"
 systemctl daemon-reload
-systemctl enable catalogue &>>$LOG_FILE
+systemctl enable catalogue
 VALIDATE $? "Enabling Catalogue"
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Copy mongo repo"
-dnf install mongodb-mongosh -y &>>$LOG_FILE
+dnf install mongodb-mongosh -y
 VALIDATE $? "Install MONGODB client"
-mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
+mongosh --host $MONGODB_HOST </app/db/master-data.js
 VALIDATE $? "Load Catalogue Products"
 systemctl restart catalogue
-VALIDATE $? "Restarted Catalogue"
+VALIDATE $? "Restarting Catalogue Service"
