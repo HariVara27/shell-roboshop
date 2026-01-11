@@ -25,7 +25,7 @@ VALIDATE(){ #functions recieve i/p's through args like shell script args
         echo -e " $2 is...... $R failure $NO" | tee -a $LOG_FILE
         exit 1
     else
-        echo -e  " $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
+        echo -e " $2 is.......... $G  SUCCESS $NO" | tee -a $LOG_FILE
     fi
 
 }
